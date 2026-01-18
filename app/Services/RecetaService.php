@@ -14,7 +14,8 @@ class RecetaService
     {
         if ($receta->publicada) {
             throw new DomainException(
-                'No se puede modificar una receta ya publicada'
+                'No se puede modificar una receta ya publicada',
+                0 // No usamos el código numérico de PHP, porque lo mapeamos en el Handler
             );
         }
     }

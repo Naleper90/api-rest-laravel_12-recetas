@@ -105,7 +105,10 @@ class RecetaCrudTest extends TestCase
             ])
             ->assertStatus(409) // ya gestionado en el service
             ->assertJsonFragment([
-                'error' => 'No se puede modificar una receta ya publicada',
+                'error' => 'RECETA_PUBLICADA',
+            ])
+            ->assertJsonStructure([
+               'error' => ['code','message'],
             ]);
     }
 

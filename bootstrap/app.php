@@ -15,11 +15,21 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
-        $exceptions->render(function (DomainException $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-        ], Response::HTTP_CONFLICT); // 409, que se podría poner directamente como 409
-    });
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (Throwable $e) {
+            // Mapeo de mensajes → códigos de error
+            $code = match ($e->getMessage()) {
+                'No se puede modificar una receta ya publicada'
+                    => 'RECETA_PUBLICADA',
+
+                default => 'ERROR_DOMINIO',
+            };
+
+            return response()->json([
+                'error' => [
+                    'code' => $code,
+                    'message' => $e->getMessage(),
+                ],
+            ], Response::HTTP_CONFLICT); // 409
+        });
 })->create();
