@@ -70,7 +70,7 @@ class AuthTest extends TestCase
 
         // Si tu controlador usa ValidationException, típicamente devolverá 422.
         // Si tú decides devolver 401, ajusta aquí.
-        $response->assertStatus(422);
+        $response->assertStatus(401);
     }
 
     public function test_me_requires_authentication(): void

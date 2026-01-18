@@ -75,18 +75,17 @@ class AuthController extends Controller
     }
 
     //Refrescar un token (opcional)
-    public function refreshToken(Request $request): JsonResponse
+    public function refresh(Request $request): JsonResponse
     {
         $user = $request->user();
+
         // Eliminar el token actual
         $request->user()->currentAccessToken()->delete();
-        // Crear un nuevo token
-        $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ],200);
+        // Crear un nuevo token
+        $newToken = $user->createToken('api-token')->plainTextToken;
+
+        return response()->json(['token' => $newToken], 200);
     }
 
 }
