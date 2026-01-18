@@ -10,8 +10,20 @@ class Receta extends Model
     /** @use HasFactory<\Database\Factories\RecetaFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'titulo', 'descripcion', 'instrucciones'];
 
+    // El atributo protected $fillable sirve para definir qué campos de la tabla
+    // pueden ser asignados masivamente (mass assignment). Esto es importante
+    // para proteger contra asignaciones no deseadas o maliciosas cuando se crean
+    // o actualizan registros en la base de datos.
+    protected $fillable = [
+        'user_id',
+        'titulo',
+        'descripcion',
+        'instrucciones',
+        'publicada',
+    ];
+
+    // Relación inversa: una receta pertenece a un usuario
     public function user()
     {
         return $this->belongsTo(\App\Models\User::class);

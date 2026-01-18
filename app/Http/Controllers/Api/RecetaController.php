@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Receta;
 use Illuminate\Http\Request;
+use App\Services\RecetaService;
 
 class RecetaController extends Controller
 {
@@ -40,7 +41,7 @@ class RecetaController extends Controller
     }
 
     // Actualizar una receta existente
-    public function update(Request $request, Receta $receta)
+    public function update(Request $request, Receta $receta,RecetaService $recetaService)
     {
         // Forma clásica (Laravel <=10, muy común en empresa)
         $this->authorize('update', $receta);
@@ -51,7 +52,9 @@ class RecetaController extends Controller
          * use Illuminate\Support\Facades\Gate;
          * Gate::authorize('update', $receta);
          */
-
+        // Política de negocio (si se puede)
+        $recetaService->assertCanBeModified($receta);
+        
         $data = $request->validate([
             'titulo' => 'sometimes|required|string|max:200',
             'descripcion' => 'sometimes|required|string',
