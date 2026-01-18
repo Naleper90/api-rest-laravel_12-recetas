@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,4 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+        $exceptions->render(function (DomainException $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+        ], Response::HTTP_CONFLICT); // 409, que se podría poner directamente como 409
+    });
+})->create();

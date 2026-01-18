@@ -103,7 +103,10 @@ class RecetaCrudTest extends TestCase
             ->putJson("/api/recetas/{$receta->id}", [
                 'titulo' => 'Intento ilegal',
             ])
-            ->assertStatus(500); // DomainException sin handler aún
+            ->assertStatus(409) // ya gestionado en el service
+            ->assertJsonFragment([
+                'error' => 'No se puede modificar una receta ya publicada',
+            ]);
     }
 
     public function test_owner_can_delete_receta(): void

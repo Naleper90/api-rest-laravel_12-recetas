@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Receta;
 use Illuminate\Http\Request;
 use App\Services\RecetaService;
+use App\Http\Resources\RecetaResource;
 
 class RecetaController extends Controller
 {
     // Listar todas las recetas
     public function index()
     {
-        return Receta::latest()->paginate(10);
+        return RecetaResource::collection(
+        Receta::latest()->paginate(10)
+    );
     }
 
     // Crear una nueva receta
@@ -35,9 +38,10 @@ class RecetaController extends Controller
     }
 
     // Mostrar una receta específica
-    public function show(Receta $receta): \Illuminate\Http\JsonResponse
+    public function show(Receta $receta) //: \Illuminate\Http\JsonResponse
     {
-        return response()->json($receta);
+        //return response()->json($receta);
+        return $receta;
     }
 
     // Actualizar una receta existente
@@ -54,7 +58,7 @@ class RecetaController extends Controller
          */
         // Política de negocio (si se puede)
         $recetaService->assertCanBeModified($receta);
-        
+
         $data = $request->validate([
             'titulo' => 'sometimes|required|string|max:200',
             'descripcion' => 'sometimes|required|string',
