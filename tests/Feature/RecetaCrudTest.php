@@ -144,4 +144,47 @@ class RecetaCrudTest extends TestCase
             ->deleteJson("/api/recetas/{$receta->id}")
             ->assertStatus(403);
     }
+
+    public function test_can_paginate_with_custom_page_size(): void
+    {
+        User::factory()->create();
+        Receta::factory()->count(30)->create();
+
+        $token = User::first()->createToken('api')->plainTextToken;
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->getJson('/api/recetas?per_page=5')
+            ->assertStatus(200)
+            ->assertJsonPath('meta.per_page', 5);
+    }
+
+    public function test_can_sort_recetas_by_title(): void
+    {
+        $user = User::factory()->create();
+
+        Receta::factory()->create(['titulo' => 'Zeta']);
+        Receta::factory()->create(['titulo' => 'Alpha']);
+
+        $token = $user->createToken('api')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer $token")
+            ->getJson('/api/recetas?sort=titulo');
+
+        $response->assertJsonPath('data.0.titulo', 'Alpha');
+    }
+
+    public function test_can_search_recetas_by_text(): void
+    {
+        $user = User::factory()->create();
+
+        Receta::factory()->create(['titulo' => 'Tortilla de patatas']);
+        Receta::factory()->create(['titulo' => 'Gazpacho']);
+
+        $token = $user->createToken('api')->plainTextToken;
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->getJson('/api/recetas?q=tortilla')
+            ->assertStatus(200)
+            ->assertJsonCount(1, 'data');
+    }
 }

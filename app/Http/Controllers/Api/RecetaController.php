@@ -11,11 +11,34 @@ use App\Http\Resources\RecetaResource;
 class RecetaController extends Controller
 {
     // Listar todas las recetas
-    public function index()
+    public function index(Request $request)
     {
-        return RecetaResource::collection(
-        Receta::latest()->paginate(10)
-    );
+        $query = Receta::query();
+
+        // Búsqueda
+        if ($search = $request->query('q')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('titulo', 'ILIKE', "%{$search}%")
+                    ->orWhere('descripcion', 'ILIKE', "%{$search}%");
+            });
+        } //PostgreSQL ✔ (ILIKE)
+
+        // Ordenación
+        $allowedSorts = ['titulo', 'created_at'];
+        if ($sort = $request->query('sort')) {
+            $direction = str_starts_with($sort, '-') ? 'desc' : 'asc';
+            $field = ltrim($sort, '-');
+
+            if (in_array($field, $allowedSorts)) {
+                $query->orderBy($field, $direction);
+            }
+        }
+
+        // Paginación
+        $perPage = min((int) $request->query('per_page', 10), 50);
+        $recetas = $query->paginate($perPage);
+
+        return RecetaResource::collection($recetas);
     }
 
     // Crear una nueva receta
@@ -45,7 +68,7 @@ class RecetaController extends Controller
     }
 
     // Actualizar una receta existente
-    public function update(Request $request, Receta $receta,RecetaService $recetaService)
+    public function update(Request $request, Receta $receta, RecetaService $recetaService)
     {
         // Forma clásica (Laravel <=10, muy común en empresa)
         $this->authorize('update', $receta);
@@ -82,7 +105,7 @@ class RecetaController extends Controller
          * Gate::authorize('delete', $receta);
          */
 
-       
+
 
         // 2. Acción
         $receta->delete();
