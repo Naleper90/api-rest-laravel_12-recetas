@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (Throwable $e) {
+        $exceptions->render(function (DomainException $e) {
             // Mapeo de mensajes → códigos de error
             $code = match ($e->getMessage()) {
                 'No se puede modificar una receta ya publicada'

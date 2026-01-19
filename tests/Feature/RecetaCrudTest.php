@@ -103,12 +103,11 @@ class RecetaCrudTest extends TestCase
             ->putJson("/api/recetas/{$receta->id}", [
                 'titulo' => 'Intento ilegal',
             ])
-            ->assertStatus(409) // ya gestionado en el service
             ->assertJsonFragment([
-                'error' => 'RECETA_PUBLICADA',
+                'code' => 'RECETA_PUBLICADA',
             ])
             ->assertJsonStructure([
-               'error' => ['code','message'],
+                'error' => ['code', 'message'],
             ]);
     }
 

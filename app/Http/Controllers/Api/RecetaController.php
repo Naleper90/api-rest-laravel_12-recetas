@@ -74,6 +74,7 @@ class RecetaController extends Controller
     // Eliminar una receta
     public function destroy(Receta $receta)
     {
+        // 1. Autorización (403 si falla)
         $this->authorize('delete', $receta);
 
         /*
@@ -81,6 +82,9 @@ class RecetaController extends Controller
          * Gate::authorize('delete', $receta);
          */
 
+       
+
+        // 2. Acción
         $receta->delete();
 
         return response()->json(['message' => 'Receta eliminada']);
