@@ -17,7 +17,8 @@ Archivo: `app/Http/Resources/RecetaResource.php`.
 Archivo: `app/Policies/RecetaPolicy.php`.
 
 - Contiene reglas de autorizacion por usuario.
-- En este proyecto solo el propietario puede editar o borrar.
+- En este proyecto el admin puede editar/borrar cualquier receta, y el usuario
+  normal solo sus propias recetas (ver docs/07_roles_permisos.md).
 - Se invoca desde el controlador con `$this->authorize('update', $receta)`.
 
 ## RecetaService

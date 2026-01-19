@@ -13,6 +13,7 @@ Este indice organiza la documentacion por temas para alumnado que no ha visto La
 - docs/04_modelos_policies_servicios.md: Modelos, recursos, policies y servicios.
 - docs/05_base_de_datos.md: Migraciones y factories.
 - docs/06_tests.md: Pruebas feature y unit.
+- docs/07_roles_permisos.md: Roles y permisos con Spatie + Sanctum.
 
 ## Archivos creados o modificados para este proyecto
 (Partiendo de un Laravel 12 con Sail)
@@ -29,7 +30,14 @@ Este indice organiza la documentacion por temas para alumnado que no ha visto La
 - app/Services/RecetaService.php
 - database/migrations/2026_01_14_185814_create_recetas_table.php
 - database/migrations/2026_01_18_174518_add_publicada_to_recetas_table.php
+- database/migrations/2026_01_19_011252_create_permission_tables.php
 - database/factories/RecetaFactory.php
+- database/seeders/DatabaseSeeder.php
+- database/seeders/RoleSeeder.php
+- app/Models/User.php
+- config/auth.php
+- config/permission.php
+- .env (no se versiona)
 - tests/Feature/AuthTest.php
 - tests/Feature/RecetaCrudTest.php
 - tests/Feature/RecetaAuthorizationTest.php

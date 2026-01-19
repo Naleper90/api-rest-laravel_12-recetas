@@ -14,6 +14,7 @@ return [
     */
 
     'defaults' => [
+        // Guía docente: ver docs/07_roles_permisos.md.
         'guard' => env('AUTH_GUARD', 'web'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    // Guía docente: ver docs/07_roles_permisos.md.
 
     'models' => [
 

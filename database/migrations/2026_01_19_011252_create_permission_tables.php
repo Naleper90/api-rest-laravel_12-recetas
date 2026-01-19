@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    // Guía docente: ver docs/07_roles_permisos.md.
     /**
      * Run the migrations.
      */

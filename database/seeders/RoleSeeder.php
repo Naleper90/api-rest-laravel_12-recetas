@@ -8,13 +8,14 @@ use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
+    // Guía docente: ver docs/07_roles_permisos.md.
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // 
-       Role::firstOrCreate([
+        // Creamos roles con el guard de Sanctum (tokens), no con web.
+        Role::firstOrCreate([
             'name' => 'admin',
             'guard_name' => 'sanctum',
         ]);

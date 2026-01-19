@@ -11,6 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    // Guía docente: ver docs/07_roles_permisos.md.
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasRoles,HasApiTokens,HasFactory, Notifiable;
 

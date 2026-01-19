@@ -13,6 +13,8 @@ Archivo: `tests/Feature/RecetaCrudTest.php`.
 ## Feature: RecetaAuthorizationTest
 Archivo: `tests/Feature/RecetaAuthorizationTest.php`.
 - Comprueba que solo el propietario puede editar o borrar.
+- En tests con roles se crean roles manualmente, porque la BD de tests es nueva y
+  no hereda los seeders del entorno real.
 
 ## Unit: RecetaServiceTest
 Archivo: `tests/Unit/RecetaServiceTest.php`.

@@ -9,6 +9,7 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
+    // Guía docente: ver docs/07_roles_permisos.md.
 
     /**
      * Seed the application's database.

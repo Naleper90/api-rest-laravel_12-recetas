@@ -54,6 +54,7 @@ class RecetaAuthorizationTest extends TestCase
 
     public function test_admin_can_delete_any_receta(): void
     {
+        // En tests hay BD aislada; hay que crear roles aqui (no usamos la BD real).
         Role::create(['name' => 'admin','guard_name' => 'sanctum']);
         Role::create(['name' => 'user', 'guard_name' => 'sanctum']);
 
