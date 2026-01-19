@@ -6,6 +6,7 @@ use App\Models\Receta;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Spatie\Permission\Models\Role;
 
 class RecetaAuthorizationTest extends TestCase
 {
@@ -53,11 +54,14 @@ class RecetaAuthorizationTest extends TestCase
 
     public function test_admin_can_delete_any_receta(): void
     {
+        Role::create(['name' => 'admin','guard_name' => 'sanctum']);
+        Role::create(['name' => 'user', 'guard_name' => 'sanctum']);
+
         $admin = User::factory()->create();
         $admin->assignRole('admin');
 
         $owner = User::factory()->create();
-        $owner->assignRole('user');
+        $owner->assignRole('user'); // si lo necesitas, crea también el rol user
 
         $receta = Receta::factory()->create([
             'user_id' => $owner->id,
