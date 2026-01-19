@@ -7,6 +7,7 @@ use DomainException;
 
 class RecetaService
 {
+    // Guía docente: ver docs/04_modelos_policies_servicios.md.
     /**
      * Comprueba si una receta puede modificarse según reglas de negocio.
      */

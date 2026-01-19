@@ -10,6 +10,7 @@ use App\Http\Resources\RecetaResource;
 
 class RecetaController extends Controller
 {
+    // Guía docente: ver docs/03_controladores.md.
     // Listar todas las recetas
     public function index(Request $request)
     {

@@ -14,14 +14,18 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Admin',
-                'email' => 'admin@example.com',
-                'password' => Hash::make('password'), // contraseña simple para pruebas
-            ]
+        $admin = \App\Models\User::updateOrCreate(
+            ['email' => 'admin@demo.local'],
+            ['name' => 'Admin', 'password' => bcrypt('password')]
         );
+
+        $admin->assignRole('admin');
+
+        $user = \App\Models\User::updateOrCreate(
+            ['email' => 'user@demo.local'],
+            ['name' => 'User', 'password' => bcrypt('password')]
+        );
+
+        $user->assignRole('user');
     }
 }

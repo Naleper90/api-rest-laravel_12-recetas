@@ -11,6 +11,7 @@ use Tests\TestCase;
 class AuthTest extends TestCase
 {
     use RefreshDatabase;
+    // Guía docente: ver docs/06_tests.md.
 
         /**
      * A basic feature test example.
@@ -119,4 +120,3 @@ class AuthTest extends TestCase
         $this->assertDatabaseCount('personal_access_tokens', 1);
     }
 }
-

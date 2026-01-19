@@ -10,6 +10,7 @@ use Tests\TestCase;
 class RecetaAuthorizationTest extends TestCase
 {
     use RefreshDatabase;
+    // Guía docente: ver docs/06_tests.md.
 
     public function test_owner_can_update_receta(): void
     {
@@ -48,5 +49,24 @@ class RecetaAuthorizationTest extends TestCase
         $this->withHeader('Authorization', 'Bearer ' . $token)
             ->deleteJson("/api/recetas/{$receta->id}")
             ->assertStatus(403);
+    }
+
+    public function test_admin_can_delete_any_receta(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $owner = User::factory()->create();
+        $owner->assignRole('user');
+
+        $receta = Receta::factory()->create([
+            'user_id' => $owner->id,
+        ]);
+
+        $token = $admin->createToken('api-token')->plainTextToken;
+
+        $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->deleteJson("/api/recetas/{$receta->id}")
+            ->assertStatus(200);
     }
 }

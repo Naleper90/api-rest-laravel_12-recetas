@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RecetaFactory extends Factory
 {
+    // Guía docente: ver docs/05_base_de_datos.md.
 
     protected $model = Receta::class;
     /**

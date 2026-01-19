@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Receta extends Model
 {
+    // Guía docente: ver docs/04_modelos_policies_servicios.md.
     /** @use HasFactory<\Database\Factories\RecetaFactory> */
     use HasFactory;
 

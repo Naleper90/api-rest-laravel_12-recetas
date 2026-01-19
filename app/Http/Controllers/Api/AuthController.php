@@ -10,6 +10,7 @@ use \Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
+    // Guía docente: ver docs/03_controladores.md.
     //Register, Login, Logout, Me
     //Register
     public function register(Request $request): JsonResponse

@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 /**
  * Controller base del proyecto.
+ * Guía docente: ver docs/03_controladores.md.
  *
  * NOTA DOCENTE:
  *  - En Laravel <=10, este trait venía por defecto.

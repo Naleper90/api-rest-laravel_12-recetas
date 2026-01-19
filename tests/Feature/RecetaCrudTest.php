@@ -10,6 +10,7 @@ use Tests\TestCase;
 class RecetaCrudTest extends TestCase
 {
     use RefreshDatabase;
+    // Guía docente: ver docs/06_tests.md.
 
     private function authUser(): array
     {

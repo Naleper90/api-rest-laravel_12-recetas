@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class RecetaResource extends JsonResource
 {
+    // Guía docente: ver docs/04_modelos_policies_servicios.md.
     /**
      * Transform the resource into an array.
      *

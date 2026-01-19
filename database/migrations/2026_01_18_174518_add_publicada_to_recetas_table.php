@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    // Guía docente: ver docs/05_base_de_datos.md.
     /**
      * Run the migrations.
      */

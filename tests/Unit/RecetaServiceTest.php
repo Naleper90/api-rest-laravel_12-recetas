@@ -11,6 +11,7 @@ use Tests\TestCase;
 class RecetaServiceTest extends TestCase
 {
     use RefreshDatabase;
+    // Guía docente: ver docs/06_tests.md.
 
     public function test_receta_no_publicada_puede_modificarse(): void
     {
