@@ -19,30 +19,18 @@ php artisan serve
 
 ### Partes Obligatorias
 - **Sistemas de Ingredientes**: CRUD completo (`index`, `store`, `update`, `destroy`) bajo el endpoint `/api/recetas/{id}/ingredientes`. Incluye validación de unidades y cantidades.
-- **Sistema de Likes**: Endpoints para dar y quitar likes de forma atómica. Gestión de duplicados mediante tabla pivote y lógica en controlador.
+- **Sistema de Likes**: Endpoints para dar y quitar likes de forma atómica. Gestión de duplicados mediante tabla pivote.
 - **Sistema de Comentarios**: Listado por receta y creación de comentarios. Incluye el nombre del autor en la respuesta JSON.
 
 ### Partes Opcionales (Plus de nota)
 - **Imagen de Receta**: Sistema de subida de archivos (JPEG/PNG) con validación de tamaño (2MB) y almacenamiento en disco `public`.
-- **Búsquedas Avanzadas**: El buscador (`q`) ahora indexa también ingredientes.
+- **Búsquedas Avanzadas**: El buscador (`q`) ahora permite buscar por nombre de ingredientes.
 - **Filtros y Ordenación**:
   - Filtro por número mínimo de likes (`min_likes`).
   - Ordenación dinámica por `popularidad` (conteo de likes).
-- **Swagger**: Estructura de documentación OpenAPI 3.0 integrada mediante anotaciones en controladores.
+- **Swagger**: Documentación OpenAPI 3.0 integrada mediante anotaciones en controladores.
 
-## 2. Decisiones Técnicas
-
-### Relaciones de Base de Datos
-- **Receta 1:N Ingredientes**: Se ha optado por 1:N para simplificar la gestión de cantidades y unidades específicas para cada plato, evitando la sobre-ingeniería de ingredientes globales.
-- **Receta N:M Usuario (Likes)**: Tabla pivote `receta_user` para gestionar los favoritos/likes sin duplicidad.
-- **Receta 1:N Comentarios**: Registro de feedback de usuarios.
-
-### Diseño de Endpoints
-- Se ha mantenido el estándar RESTful utilizando **API Resources** para todas las respuestas.
-- **Seguridad**: Se han aplicado **Policies** de Laravel para asegurar que solo los propietarios o administradores puedan modificar/borrar contenido.
-- **Compatibilidad**: Lógica de búsqueda "Driver Aware" que cambia entre `LIKE` (SQLite) e `ILIKE` (PostgreSQL) automáticamente.
-
-## 3. Cómo probar la API (HTTPie)
+## 2. Cómo probar la API (HTTPie)
 
 ### Autenticación
 ```bash
@@ -69,13 +57,32 @@ http GET :8000/api/recetas?q=Sal "Authorization:Bearer $TOKEN"
 http GET :8000/api/recetas?sort=-popularidad "Authorization:Bearer $TOKEN"
 ```
 
+## 3. Decisiones Técnicas
+
+### Relaciones de Base de Datos
+- **Receta 1:N Ingredientes**: Se ha optado por 1:N para simplificar la gestión de cantidades y unidades específicas para cada plato, evitando la sobre-ingeniería de ingredientes globales.
+- **Receta N:M Usuario (Likes)**: Tabla pivote `receta_user` para gestionar los favoritos/likes sin duplicidad.
+- **Receta 1:N Comentarios**: Registro de feedback de usuarios.
+
+### Diseño de Endpoints
+- Se ha mantenido el estándar RESTful utilizando **API Resources** para todas las respuestas.
+- **Seguridad**: Se han aplicado **Policies** de Laravel para asegurar que solo los propietarios o administradores puedan modificar/borrar contenido.
+- **Roles y Permisos**: Uso de Spatie Permissions para gestionar niveles de acceso (`admin` vs `user`).
+
 ## 4. Dificultades Encontradas
 - **Caché de Spatie en Tests**: Los roles desaparecían entre ejecuciones de tests. Se solucionó reseteando la caché en el `setUp` del `TestCase` global.
 - **Extensión GD**: La falta de esta librería en algunos entornos de testing impedía el uso de `UploadedFile::fake()->image()`. Se corrigió usando `fake()->create()` con mimes manuales.
-- **Swagger Generation**: Incompatibilidad interna de la librería l5-swagger con el logger de este entorno específico. El código de las anotaciones se deja implementado y verificado sintácticamente.
+- **Compatibilidad SQL**: SQLite no soporta `ILIKE`. Se implementó un "Driver Aware Search" que cambia entre `LIKE` e `ILIKE` en tiempo de ejecución.
 
-## 5. Pruebas Automáticas
-Se entregan un total de **35 tests funcionales** exitosos que cubren el 100% de la lógica añadida y aseguran no haber roto la funcionalidad previa.
+## 5. Mejoras Pendientes
+- **Swagger Interactivo**: Configuración del motor de generación automática completa una vez resuelta la incompatibilidad de la librería `l5-swagger` con el entorno de servidor local.
+- **Optimización de Imágenes**: Implementar reescalado automático de imágenes en el servidor.
+- **Notificaciones**: Sistema de alertas cuando una receta recibe nuevos likes o comentarios.
+
+## 6. Pruebas Automáticas (Tests)
+Se entregan un total de **35 tests funcionales** exitosos.
+- Cobertura de todas las nuevas funcionalidades en `tests/Feature/ExtensionTest.php`.
+- Garantía de que los tests originales siguen pasando.
 
 ```bash
 php artisan test
