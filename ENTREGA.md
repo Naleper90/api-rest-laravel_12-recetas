@@ -2,6 +2,19 @@
 
 Este documento detalla la implementación de las extensiones obligatorias y opcionales realizadas sobre la API REST de Recetas.
 
+## 0. Instrucciones de Instalación
+Para poner en marcha el proyecto tras clonarlo, ejecute los siguientes comandos:
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+# Configure su base de datos en el .env (por defecto SQLite)
+php artisan migrate:fresh --seed
+php artisan storage:link
+php artisan serve
+```
+
 ## 1. Qué se ha implementado
 
 ### Partes Obligatorias
