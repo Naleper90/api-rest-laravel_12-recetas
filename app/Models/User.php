@@ -53,5 +53,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Receta::class);
     }
-    
+
+    public function likes()
+    {
+        return $this->belongsToMany(Receta::class, 'receta_user')->withTimestamps();
+    }
 }

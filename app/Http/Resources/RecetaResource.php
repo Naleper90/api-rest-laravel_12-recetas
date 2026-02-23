@@ -22,6 +22,8 @@ class RecetaResource extends JsonResource
             'instrucciones' => $this->instrucciones,
             'publicada' => $this->publicada,
             'user_id' => $this->user_id,
+            'imagen' => $this->imagen ? \Illuminate\Support\Facades\Storage::url($this->imagen) : null,
+            'likes_count' => $this->likes()->count(),
             'created_at' => $this->created_at,
         ];
     }

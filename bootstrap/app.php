@@ -14,9 +14,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->redirectGuestsTo(fn () => null);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->shouldRenderJsonWhen(function ($request, $e) {
+            if ($request->is('api/*')) {
+                return true;
+            }
+
+            return $request->expectsJson();
+        });
+
         $exceptions->render(function (DomainException $e) {
             // Mapeo de mensajes → códigos de error
             $code = match ($e->getMessage()) {
@@ -33,4 +41,4 @@ return Application::configure(basePath: dirname(__DIR__))
                 ],
             ], Response::HTTP_CONFLICT); // 409
         });
-})->create();
+    })->create();

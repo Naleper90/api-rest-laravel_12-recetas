@@ -11,27 +11,54 @@ use App\Http\Resources\RecetaResource;
 class RecetaController extends Controller
 {
     // Guía docente: ver docs/03_controladores.md.
+
+    /**
+     * @OA\Get(
+     *     path="/api/recetas",
+     *     summary="Listar recetas con filtros",
+     *     tags={"Recetas"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="q", in="query", description="Búsqueda por título, descripción o ingredientes", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="min_likes", in="query", description="Mínimo de likes", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="sort", in="query", description="Campo a ordenar (titulo, created_at, popularidad). Prefijo '-' para desc.", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="Lista de recetas"),
+     *     @OA\Response(response=401, description="No autenticado")
+     * )
+     */
     // Listar todas las recetas
     public function index(Request $request)
     {
         $query = Receta::query();
 
         // Búsqueda
+        $like = \Illuminate\Support\Facades\DB::getDriverName() === 'pgsql' ? 'ILIKE' : 'LIKE';
         if ($search = $request->query('q')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('titulo', 'ILIKE', "%{$search}%")
-                    ->orWhere('descripcion', 'ILIKE', "%{$search}%");
+            $query->where(function ($q) use ($search, $like) {
+                $q->where('titulo', $like, "%{$search}%")
+                    ->orWhere('descripcion', $like, "%{$search}%")
+                    ->orWhereHas('ingredientes', function ($qi) use ($search, $like) {
+                        $qi->where('nombre', $like, "%{$search}%");
+                    });
             });
-        } //PostgreSQL ✔ (ILIKE)
+        } // Driver aware + Ingredients search ✔
+
+        // Filtro por likes mínimos
+        if ($minLikes = $request->query('min_likes')) {
+            $query->has('likes', '>=', (int) $minLikes);
+        }
 
         // Ordenación
-        $allowedSorts = ['titulo', 'created_at'];
+        $allowedSorts = ['titulo', 'created_at', 'popularidad'];
         if ($sort = $request->query('sort')) {
             $direction = str_starts_with($sort, '-') ? 'desc' : 'asc';
             $field = ltrim($sort, '-');
 
             if (in_array($field, $allowedSorts)) {
-                $query->orderBy($field, $direction);
+                if ($field === 'popularidad') {
+                    $query->withCount('likes')->orderBy('likes_count', $direction);
+                } else {
+                    $query->orderBy($field, $direction);
+                }
             }
         }
 
@@ -112,5 +139,47 @@ class RecetaController extends Controller
         $receta->delete();
 
         return response()->json(['message' => 'Receta eliminada']);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/recetas/{id}/imagen",
+     *     summary="Subir imagen de la receta",
+     *     tags={"Recetas"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="imagen", type="string", format="binary", description="Archivo JPEG/PNG máx 2MB")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Imagen subida con éxito"),
+     *     @OA\Response(response=403, description="No autorizado"),
+     *     @OA\Response(response=422, description="Error de validación")
+     * )
+     */
+    // Subir imagen de la receta
+    public function uploadImagen(Request $request, Receta $receta)
+    {
+        $this->authorize('update', $receta);
+
+        $request->validate([
+            'imagen' => 'required|image|mimes:jpeg,png|max:2048',
+        ]);
+
+        // Borrar imagen anterior si existe
+        if ($receta->imagen) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($receta->imagen);
+        }
+
+        $path = $request->file('imagen')->store('recetas', 'public');
+
+        $receta->update(['imagen' => $path]);
+
+        return new RecetaResource($receta);
     }
 }

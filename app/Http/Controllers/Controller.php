@@ -7,6 +7,22 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 /**
+ * @OA\Info(
+ *     title="API de Recetas",
+ *     version="2.0",
+ *     description="API extendida con Ingredientes, Likes, Comentarios e Imágenes"
+ * )
+ * @OA\Server(
+ *     url="http://localhost",
+ *     description="Servidor Local"
+ * )
+ * @OA\SecurityScheme(
+ *     securityScheme="sanctum",
+ *     type="apiKey",
+ *     in="header",
+ *     name="Authorization",
+ *     description="Introduce 'Bearer <token>'"
+ * )
  * Controller base del proyecto.
  * Guía docente: ver docs/03_controladores.md.
  *

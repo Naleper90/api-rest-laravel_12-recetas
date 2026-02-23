@@ -1,0 +1,119 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Recetas",
+        "description": "Documentación Completa (Plus de nota)",
+        "version": "2.0"
+    },
+    "paths": {
+        "/api/recetas": {
+            "get": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Listar recetas con filtros (min_likes, q, sort)",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Crear receta",
+                "responses": {
+                    "201": {
+                        "description": "Creada"
+                    }
+                }
+            }
+        },
+        "/api/recetas/{id}/imagen": {
+            "post": {
+                "tags": [
+                    "Recetas"
+                ],
+                "summary": "Subir imagen (JPEG/PNG)",
+                "responses": {
+                    "200": {
+                        "description": "Subida con éxito"
+                    }
+                }
+            }
+        },
+        "/api/recetas/{id}/ingredientes": {
+            "get": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Listar ingredientes de una receta",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ingredientes"
+                ],
+                "summary": "Añadir ingrediente",
+                "responses": {
+                    "201": {
+                        "description": "Añadido"
+                    }
+                }
+            }
+        },
+        "/api/recetas/{id}/likes": {
+            "post": {
+                "tags": [
+                    "Likes"
+                ],
+                "summary": "Dar like",
+                "responses": {
+                    "200": {
+                        "description": "Like registrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Likes"
+                ],
+                "summary": "Quitar like",
+                "responses": {
+                    "200": {
+                        "description": "Like eliminado"
+                    }
+                }
+            }
+        },
+        "/api/recetas/{id}/comentarios": {
+            "get": {
+                "tags": [
+                    "Comentarios"
+                ],
+                "summary": "Listar comentarios",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Comentarios"
+                ],
+                "summary": "Añadir comentario",
+                "responses": {
+                    "201": {
+                        "description": "Comentario guardado"
+                    }
+                }
+            }
+        }
+    }
+}
